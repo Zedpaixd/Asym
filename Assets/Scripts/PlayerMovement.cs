@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -23,6 +24,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private int maxJumps = 1;
     float jumpForce;
     int jumpCounter;
+    int layerMask;
+
+
+    private bool moved = false; // fix this!!! horrible
+    
     
     [Header("Player")]
 
@@ -46,6 +52,9 @@ public class PlayerMovement : MonoBehaviour
         gravity = -(2 * maxJumpHeight) / timeToJumpApex;
         jumpForce = (Mathf.Abs(gravity) * timeToJumpApex);
 
+        layerMask = LayerMask.GetMask(Globals.GROUND_TAG);
+
+        Physics2D.IgnoreLayerCollision(8, 8);
     }
 
 
@@ -54,11 +63,37 @@ public class PlayerMovement : MonoBehaviour
         moveSpeed = Mathf.MoveTowards(moveSpeed, maxMoveSpeed, Time.deltaTime);
         GetInput();
 
+        WallCheck();
 
-
+        if (direction != 0) moved = true; // fix!!!
 
         ApplyMovement();
         GroundedCheck();
+        
+    }
+
+    private void LateUpdate()
+    {
+        InBounds();
+    }
+
+    private void InBounds()
+    {
+        if (!GetComponent<Renderer>().isVisible && moved)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+
+    private void WallCheck()
+    {
+        RaycastHit2D hitRight = Physics2D.Raycast(transform.position,Vector2.right,0.365f,layerMask);
+        RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, Vector2.left, 0.365f, layerMask);
+        if ((hitRight.collider != null && direction > 0) || (hitLeft.collider != null && direction < 0))  //this is ugly code; better way?
+        {
+            direction = 0;
+        }
+
     }
 
     private void GroundedCheck()
