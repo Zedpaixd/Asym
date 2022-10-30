@@ -28,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
 
 
     private bool moved = false; // fix this!!! horrible
+    private bool loading = false; // this is also horrible
     
     
     [Header("Player")]
@@ -55,6 +56,7 @@ public class PlayerMovement : MonoBehaviour
         layerMask = LayerMask.GetMask(Globals.GROUND_TAG);
 
         Physics2D.IgnoreLayerCollision(8, 8);
+        loading = false;
     }
 
 
@@ -79,8 +81,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void InBounds()
     {
-        if (!GetComponent<Renderer>().isVisible && moved)
+        if (!GetComponent<Renderer>().isVisible && moved && !loading)
         {
+            loading = true;
+            SongTime.updateProgress();
+            //StaticLevelSelector.GoToLevelX(SceneManager.GetActiveScene().buildIndex,this);  why does this not work?
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }

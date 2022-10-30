@@ -5,9 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class LevelSelect : MonoBehaviour
 {
-    public void GoToLevel1()
+    public void GoToLevelX(string X)
     {
-        StartCoroutine(loadLevelAsync("Level 01"));
+        StartCoroutine(loadLevelAsync("Level " + X));
     }
 
     public void Back()

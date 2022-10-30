@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using static UnityEngine.RuleTile.TilingRuleOutput;
+using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class PressableButton : MonoBehaviour
 {
@@ -45,7 +47,8 @@ public class PressableButton : MonoBehaviour
 
         if (pressedButtons == 2)
         {
-            Debug.Log("Shenanigans");
+            SongTime.updateProgress();
+            StaticLevelSelector.GoToLevelX(SceneManager.GetActiveScene().buildIndex+1, this);
         }
     }
 

@@ -24,6 +24,13 @@ public class AudioManager : GenericSingleton<AudioManager>
         {
             source.time = progress;
         }
+        else
+        {
+            if (SongTime.getProgress() != 0)
+            {
+                source.time = SongTime.getProgress();
+            }
+        }
 
         source.Play();
 

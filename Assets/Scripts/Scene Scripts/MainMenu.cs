@@ -8,7 +8,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private MusicPlayerScript musicPlayerScript;
 
     public void PlayGame(){
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        /*SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);*/
+        StaticLevelSelector.GoToLevelX(SceneManager.GetActiveScene().buildIndex + 1,this);
         musicPlayerScript.saveVolume();
     }
 
