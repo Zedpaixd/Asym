@@ -13,6 +13,11 @@ public class MainMenu : MonoBehaviour
         musicPlayerScript.saveVolume();
     }
 
+    public void mainMenu()
+    {
+        StaticLevelSelector.GoToLevelX(0, this);
+    }
+
     public void QuitGame(){
         Application.Quit();
     }

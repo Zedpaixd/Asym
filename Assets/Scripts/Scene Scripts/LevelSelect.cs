@@ -10,6 +10,11 @@ public class LevelSelect : MonoBehaviour
         StartCoroutine(loadLevelAsync("Level " + X));
     }
 
+    public void GoToIndex(int X)
+    {
+        StartCoroutine(loadLevelAsync(X));
+    }
+
     public void Back()
     {
         StartCoroutine(loadLevelAsync(SceneManager.GetActiveScene().buildIndex - 1));

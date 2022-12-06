@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float maxMoveSpeed = 4.5f;
     //[SerializeField] private float minMoveSpeed = 0.5f;
     [SerializeField] private float gravity;
-    float direction;
+    public float direction;
     float moveSpeed = 5.5f;
 
     [Header("Jumping")]
@@ -27,36 +27,25 @@ public class PlayerMovement : MonoBehaviour
     int layerMask;
 
 
-    private bool moved = false; // fix this!!! horrible
-    private bool loading = false; // this is also horrible
-    
-    
     [Header("Player")]
-
     public static PlayerMovement instance;
     Rigidbody2D body;
-
 
     private void Awake()
     {
         instance = this;
     }
-
     #endregion
-
 
     private void Start()
     {
         jumpCounter = 0;
         body = GetComponent<Rigidbody2D>();
-
         gravity = -(2 * maxJumpHeight) / timeToJumpApex;
         jumpForce = (Mathf.Abs(gravity) * timeToJumpApex);
-
         layerMask = LayerMask.GetMask(Globals.GROUND_TAG);
-
         Physics2D.IgnoreLayerCollision(8, 8);
-        loading = false;
+
     }
 
 
@@ -64,41 +53,24 @@ public class PlayerMovement : MonoBehaviour
     {
         moveSpeed = Mathf.MoveTowards(moveSpeed, maxMoveSpeed, Time.deltaTime);
         GetInput();
-
         WallCheck();
-
-        if (direction != 0) moved = true; // fix!!!
-
         ApplyMovement();
         GroundedCheck();
-        
     }
 
     private void LateUpdate()
     {
-        InBounds();
-    }
-
-    private void InBounds()
-    {
-        if (!GetComponent<Renderer>().isVisible && moved && !loading)
-        {
-            loading = true;
-            SongTime.updateProgress();
-            //StaticLevelSelector.GoToLevelX(SceneManager.GetActiveScene().buildIndex,this);  why does this not work?
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
+        if (Input.GetKeyDown(KeyCode.Escape)) StaticLevelSelector.GoToLevelX(0,this);
     }
 
     private void WallCheck()
     {
         RaycastHit2D hitRight = Physics2D.Raycast(transform.position,Vector2.right,0.365f,layerMask);
         RaycastHit2D hitLeft = Physics2D.Raycast(transform.position, Vector2.left, 0.365f, layerMask);
-        if ((hitRight.collider != null && direction > 0) || (hitLeft.collider != null && direction < 0))  //this is ugly code; better way?
+        if ((hitRight.collider != null && direction > 0) || (hitLeft.collider != null && direction < 0))
         {
             direction = 0;
         }
-
     }
 
     private void GroundedCheck()
@@ -108,14 +80,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void GetInput()
     {
-
         direction = Input.GetAxis("Horizontal");
-
     }
 
     private void ApplyMovement()
     {
-        //body.velocity = new Vector2(direction * moveSpeed, 0);//Vector2.right * direction * moveSpeed;
         transform.Translate(Vector3.right * direction * Time.deltaTime * moveSpeed);
 
         if (Input.GetKeyDown(KeyCode.Space) && jumpCounter < maxJumps)
@@ -124,18 +93,4 @@ public class PlayerMovement : MonoBehaviour
             body.AddForce(Vector2.up * body.gravityScale * jumpForce, ForceMode2D.Impulse);
         }
     }
-
-    void OnCollisionEnter2D(Collision2D col)
-    {
-        /*if (col.gameObject.CompareTag(Globals.GROUND_TAG))
-        {
-            Vector2 pointOfContact = col.contacts[0].normal;
-            if ((pointOfContact == new Vector2(0, 1) && body.gravityScale > 0) || (pointOfContact == new Vector2(0, -1) && body.gravityScale < 0))
-            { 
-                jumpCounter = 0;
-            }
-            
-        }*/
-    }
-
 }

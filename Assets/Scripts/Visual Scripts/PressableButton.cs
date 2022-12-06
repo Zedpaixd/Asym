@@ -1,10 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
 
 public class PressableButton : MonoBehaviour
 {
@@ -52,8 +49,6 @@ public class PressableButton : MonoBehaviour
         }
     }
 
-
-
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.transform == transform.parent || collision.CompareTag(Globals.GROUND_TAG))
@@ -65,14 +60,9 @@ public class PressableButton : MonoBehaviour
         pressedButtons--;
     }
 
-
-
     IEnumerator smoothPress(float delayT)
     {
-
         float timer = 0f;
-
-
         while (timer <= delayT)
         {
             if (!isPressed)
@@ -80,7 +70,11 @@ public class PressableButton : MonoBehaviour
                 yield break;
             }
             timer += Time.deltaTime;
-            transform.localPosition = new Vector2(transform.localPosition.x, Mathf.Lerp(startYPos, endYPos, timer / delayT));
+            transform.localPosition = new Vector2(transform.localPosition.x, 
+                                                  Mathf.Lerp(startYPos,
+                                                  endYPos,
+                                                  timer / delayT));
+
             yield return new WaitForSeconds(Time.deltaTime);
         }
         onPress?.Invoke();
@@ -92,7 +86,11 @@ public class PressableButton : MonoBehaviour
                 yield break;
             }
             timer += Time.deltaTime;
-            transform.parent.localPosition = new Vector2(transform.parent.localPosition.x, Mathf.Lerp(startYParentPos, endYParentPos, timer / delayT));
+            transform.parent.localPosition = new Vector2(transform.parent.localPosition.x,
+                                                        Mathf.Lerp(startYParentPos,
+                                                        endYParentPos,
+                                                        timer / delayT));
+
             yield return new WaitForSeconds(Time.deltaTime);
         }
         yield return null;
@@ -100,7 +98,6 @@ public class PressableButton : MonoBehaviour
 
     IEnumerator smoothRelease(float delayT)
     {
-
         float timer = 0f;
         while (timer < delayT)
         {
@@ -109,26 +106,29 @@ public class PressableButton : MonoBehaviour
                 yield break;
             }
             timer += Time.deltaTime;
-            transform.parent.localPosition = new Vector2(transform.parent.localPosition.x, Mathf.Lerp(endYParentPos, startYParentPos, timer / delayT));
+            transform.parent.localPosition = new Vector2(transform.parent.localPosition.x,
+                                                        Mathf.Lerp(endYParentPos,
+                                                        startYParentPos,
+                                                        timer / delayT));
+
             yield return new WaitForSeconds(Time.deltaTime);
         }
         onRelease?.Invoke();
         timer = 0f;
         while (timer <= delayT)
         {
-
             if (isPressed)
             {
                 yield break;
             }
-
             timer += Time.deltaTime;
-            transform.localPosition = new Vector2(transform.localPosition.x, Mathf.Lerp(endYPos, startYPos, timer / delayT));
+            transform.localPosition = new Vector2(transform.localPosition.x,
+                                                 Mathf.Lerp(endYPos,
+                                                 startYPos,
+                                                 timer / delayT));
+
             yield return new WaitForEndOfFrame();
         }
-
-
-
         yield return null;
     }
 

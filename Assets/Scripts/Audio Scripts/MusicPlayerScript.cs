@@ -67,13 +67,8 @@ public class MusicPlayerScript : MonoBehaviour
 
         json = SaveData.LoadVolume(Path.Combine(Application.persistentDataPath,SaveData.saveName));
         AudioSource.volume = json.vol;
-        volumeSlider.value = json.vol;
-        
-    }
-
-    void Update()
-    {
-
+        //volumeSlider.value = json.vol;
+        if (volumeSlider) volumeSlider.value = json.vol;
     }
 
     public void updateVolume(float volume)

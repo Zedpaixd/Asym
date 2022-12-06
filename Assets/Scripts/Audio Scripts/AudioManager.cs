@@ -10,6 +10,7 @@ public class AudioManager : GenericSingleton<AudioManager>
     {
         base.Awake();
         source = gameObject.AddComponent<AudioSource>();
+        source.loop = true;
         SceneManager.sceneLoaded += findAudio; //(scene, mode) => { source.clip = FindObjectOfType<SceneAudio>().GetBGM(); source.Play(); };
         findAudio(SceneManager.GetActiveScene(),LoadSceneMode.Single);
         SceneManager.sceneUnloaded += UpdateProgress;
@@ -40,8 +41,4 @@ public class AudioManager : GenericSingleton<AudioManager>
     {
         progress = source.time;
     }
-
-
-
-
 }
